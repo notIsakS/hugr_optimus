@@ -96,4 +96,4 @@ env/
 *.swp
 *~
 .DS_Store
-
+.claude
