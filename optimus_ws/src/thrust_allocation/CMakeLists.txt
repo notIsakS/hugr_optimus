@@ -6,13 +6,23 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # find dependencies
-find_package(
-  ament_cmake 
-  Joy
-  REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(ament_cmake REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+
+add_executable(thrust_allocation_node src/thrust_allocation.cpp)
+
+ament_target_dependencies(thrust_allocation_node
+  rclcpp
+  std_msgs
+  sensor_msgs
+)
+
+install(TARGETS 
+  thrust_allocation_node
+  DESTINATION lib/${PROJECT_NAME}/
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
