@@ -16,10 +16,11 @@ public:
 // Recieve joy
     ThrustAllocationNode() : Node("thrust_allocation_node") 
     {
-    input_sub_ = create_subscription<sensor_msgs::msg::Joy> (
-        "sensor_msgs/msg/Joy", 100, std::bind(&ThrustAllocationNode::commands, this, _1));
+    input_sub_ = create_subscription<sensor_msgs/msg/Joy> (
+        "sensor_msgs/msg/Joy", 100, 
+        std::bind(&ThrustAllocationNode::funksjon, this, _1));
     }
-
+    
 // Interpret sticks
 
 // Math
