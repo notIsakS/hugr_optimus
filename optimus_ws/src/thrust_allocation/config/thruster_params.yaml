@@ -1,13 +1,10 @@
 thrust_allocation_node:
   ros__parameters:
     mass: 3.0       # kg
-    d1x: 0.35       # metre
-    d1y: 0.35
-    d2x: 0.35
-    d2y: 0.35
-    d3x: 0.35
-    d3y: 0.35
-    m1: 0           # metre
-    m2: 0
-    m3: 0
+    d1x: 0.0        # metre
+    d1y: 0.1575
+    d2x: 0.0
+    d2y: -0.1575
+    d3x: 0.25
+    d3y: 0.0
     deadzone: 0.05  # controller
