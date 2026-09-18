@@ -71,7 +71,6 @@ All of these parameters are freely able to be changed. Simply change the values 
     m2: 0
     m3: 0
     deadzone: 0.05  # controller
-
 ```
 
 `thruster_allocation_node`
@@ -94,10 +93,10 @@ void joystickCommands()
 ## Example
 
 | Max values | Left Joystick (x) | Left Joystick (y) | Right Joystick (\tau) |
-| :------: | :----------:| :----------: | :----------: |
-| + |  1.0 | 1.0 | 1.0 |
-| neutral |  0.0 | 0.0 | 0.0 |
-| - | -1.0 |-1.0 |-1.0 |
+| :--------: | :---------------: | :---------------: | :-------------------: |
+|     +     |        1.0        |        1.0        |          1.0          |
+|  neutral  |        0.0        |        0.0        |          0.0          |
+|     -     |       -1.0       |       -1.0       |         -1.0         |
 
 ## Code deep dive
 
@@ -124,10 +123,9 @@ Otherwise, if the YAML file IS found, private members with _ behind their name w
         d2y_  = this->get_parameter("d2y").as_double();
         d3x_  = this->get_parameter("d3x").as_double();
         d3y_  = this->get_parameter("d3y").as_double();
-        
+      
         // Controller
         deadzone_ = this->get_parameter("deadzone").as_double();
-
 ```
 
 Subscribing to the topic `/joy` with QoL: 10, and using std::bind() with ThrustAllocationNode::joystickCommands function which gathers the different axes from the joy_node.
@@ -137,16 +135,15 @@ Subscribing to the topic `/joy` with QoL: 10, and using std::bind() with ThrustA
         subscriber_ = create_subscription<sensor_msgs::msg::Joy> (
             "/joy", 10,
             std::bind(&ThrustAllocationNode::joystickCommands, this, _1));
-
 ```
 
 joystickCommands function within the std::bind() function which lets the members Fx_, Fy_, and tau_ listen to the topic /joy whilst also checks for deadzone for all axis
 
-| input | index | axis |
-|:--------:|:----------:|:-----------:|
-| Fy_ | 0 | Left/Right Axis stick left |
-| Fx_ | 1 | Up/Down Axis stick left |
-| tau_ | 3 | Left/Right Axis stick right |
+| input | index |            axis            |
+| :---: | :---: | :-------------------------: |
+|  Fy_  |   0   | Left/Right Axis stick left |
+|  Fx_  |   1   |   Up/Down Axis stick left   |
+| tau_ |   3   | Left/Right Axis stick right |
 
 ```cpp
 // Interpret sticks
@@ -172,7 +169,7 @@ Publishing a topic `/thrust_alocation` with message type Vector3() which packs `
 // Publish
         publisher_ = create_publisher<geometry_msgs::msg::Vector3>(
             "thrust_allocation", 10);
-        
+      
         auto timer_callback =
         [this]() -> void {
             auto message = geometry_msgs::msg::Vector3();
@@ -198,5 +195,22 @@ int main(int argc, char* argv[]){
     return 0;
 }
 ```
+
+## Further developement
+
+* Individual thruster force kinematics (allocate for constants and variables).
+* Killswitch implementation
+  (if L1, L2, R1, R2 == 1) {Fx_= 0, Fy_= 0, tau_= 0}
+  then you would need to press {a,b,c,d} simultaniously to get manual control back.
+
+  When killswitch is active, the boat should still be able to regulate its position as consant.
+* Normalizing data such that max
+
+  | PWM (microseconds) | joystick value lef/right |
+  | :----------------: | :----------------------: |
+  |        1900        |            1            |
+  |        1500        |            0            |
+  |        1300        |            -1            |
+* PID controller such that the user do not have to manually adjust for errors.
 
 > Maintained by SeaBotics Student Association
