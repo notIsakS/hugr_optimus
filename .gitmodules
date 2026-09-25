@@ -4,3 +4,4 @@
 [submodule "Dependencies/serial"]
 	path = Dependencies/serial
 	url = https://github.com/wjwwood/serial.git
+	branch = ros2
