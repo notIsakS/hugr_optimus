@@ -12,6 +12,20 @@ find_package(sensor_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
+set(SERIAL_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../Dependencies/serial")
+if(EXISTS "${SERIAL_ROOT}/include/serial/serial.h")
+  add_library(serial STATIC
+    "${SERIAL_ROOT}/src/serial.cc"
+    "${SERIAL_ROOT}/src/impl/unix.cc"
+    "${SERIAL_ROOT}/src/impl/list_ports/list_ports_linux.cc"
+  )
+
+  target_include_directories(serial PUBLIC "${SERIAL_ROOT}/include")
+  target_link_libraries(serial PUBLIC rt pthread)
+else()
+  message(FATAL_ERROR "serial dependency not found at ${SERIAL_ROOT}. Please ensure the Dependencies/serial source is present.")
+endif()
+
 add_executable(thrust_allocation_node src/thrust_allocation.cpp)
 
 ament_target_dependencies(thrust_allocation_node
@@ -20,6 +34,8 @@ ament_target_dependencies(thrust_allocation_node
   sensor_msgs
   geometry_msgs
 )
+
+target_link_libraries(thrust_allocation_node serial)
 
 install(TARGETS 
   thrust_allocation_node

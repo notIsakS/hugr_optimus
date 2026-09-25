@@ -13,6 +13,7 @@
   <depend>sensor_msgs</depend>
   <depend>rclcpp</depend>
   <depend>geometry_msgs</depend>
+  <!-- serial is vendored from ../Dependencies/serial and linked directly in CMake -->
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
