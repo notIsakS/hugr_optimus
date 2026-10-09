@@ -78,7 +78,7 @@ def main(args=None):
     rclpy.init(args=args)
     thrust_allocation = ThrustAllocation()
     rclpy.spin(thrust_allocation)
-
+    
     thrust_allocation.destroy_node()
     rclpy.shutdown()
 
