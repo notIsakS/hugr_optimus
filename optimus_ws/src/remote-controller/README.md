@@ -26,7 +26,13 @@ DEADZONE = 0.05
 source /opt/ros/jazzy/setup.bash
 ```
 
-whilst in `~/hugr_optimus/optimus_ws`
+**IMPORTANT!!!** whilst in `~/hugr_optimus/optimus_ws`
+
+`terminal:1 and 2`
+
+```bash
+colcon build --packages-select thrust_allocation
+```
 
 `terminal:1 and 2`
 
@@ -47,5 +53,7 @@ ros2 run joy joy_node
 ```bash
 ros2 run thrust_allocation thrust_allocation
 ```
+
+## Controller mapping
 
 ![Kontrolloppsett](../../../Documentation/figures/controller-mapping.svg)
