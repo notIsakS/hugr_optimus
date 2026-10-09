@@ -8,9 +8,12 @@ const int AB = D11;
 
 Servo t1, t2, t3;
 
+const int neutral{1500};
+unsigned long lastPackageTime{0};
+
 void setup() {
   Serial.begin(115200);
-
+  Serial.setTimeout(300);
   // Attach ESC pins with standard PWM ranges (1200us to 1900us)
   t1.attach(AB, 1300, 1900);
   t2.attach(AS, 1300, 1900);
@@ -25,19 +28,27 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() > 0) {
+  if (Serial.available()) {
     String input = Serial.readStringUntil('\n');
     input.trim();
 
-    // Parse four comma-separated values: T1, T2, T3
+    // Parse three comma-separated values: T1, T2, T3
     int v1, v2, v3;
     int parsed = sscanf(input.c_str(), "%d,%d,%d", &v1, &v2, &v3);
 
-    if (parsed == 3) {
+    if (parsed == 3) {  
       // Valid packet received -> write to ESCs
       t1.writeMicroseconds(v1);
       t2.writeMicroseconds(v2);
       t3.writeMicroseconds(v3);
+      
+      lastPackageTime = millis();
     }
+  }
+
+  if(millis() - lastPackageTime > 300){
+    t1.writeMicroseconds(neutral);
+    t2.writeMicroseconds(neutral);
+    t3.writeMicroseconds(neutral);
   }
 }
